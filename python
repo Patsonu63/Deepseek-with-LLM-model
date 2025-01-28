@@ -1,0 +1,33 @@
+import requests
+
+# Hypothetical DeepSeek API endpoint (check official documentation)
+DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions"
+
+# Your API key (obtain from DeepSeek platform)
+API_KEY = "your_api_key_here"
+
+def query_deepseek(prompt):
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "model": "deepseek-llm-7b-chat",  # Example model name
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": 500,
+        "temperature": 0.7
+    }
+
+    try:
+        response = requests.post(DEEPSEEK_API_URL, json=payload, headers=headers)
+        response.raise_for_status()
+        return response.json()['choices'][0]['message']['content']
+    except requests.exceptions.RequestException as e:
+        return f"API Error: {str(e)}"
+
+# Example usage
+if __name__ == "__main__":
+    prompt = "Explain quantum computing in simple terms"
+    response = query_deepseek(prompt)
+    print("Response:", response)
